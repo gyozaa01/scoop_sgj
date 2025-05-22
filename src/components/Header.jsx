@@ -4,10 +4,20 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export const Header = ({ currentPage, totalPages, onPrevPage, onNextPage }) => {
   // 로컬 시간 기반으로 날짜 포맷팅
-  const now = new Date();
+  const [now, setNow] = useState(new Date());
+
+  // 30초마다 갱신
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNow(new Date());
+    }, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
   const formattedDate = `${now.getFullYear().toString().slice(2)}.${(
     now.getMonth() + 1
   )
