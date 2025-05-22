@@ -10,11 +10,11 @@ export const Header = ({ currentPage, totalPages, onPrevPage, onNextPage }) => {
   // 로컬 시간 기반으로 날짜 포맷팅
   const [now, setNow] = useState(new Date());
 
-  // 30초마다 갱신
+  // 10초마다 갱신
   useEffect(() => {
     const interval = setInterval(() => {
       setNow(new Date());
-    }, 30000);
+    }, 10000);
     return () => clearInterval(interval);
   }, []);
 

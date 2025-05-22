@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { Header } from "./components/Header";
 import EmptyState from "./components/EmptyState";
+import Toast from "./components/Toast";
 
 export default function App() {
   const [pendingOrders, setPendingOrders] = useState([]);
   const [queue, setQueue] = useState([]);
+  const [showToast, setShowToast] = useState(false);
   const [hasAcceptedOrders] = useState(false);
 
   useEffect(() => {
@@ -28,6 +30,8 @@ export default function App() {
 
           setPendingOrders([updated[0]]);
           setQueue(updated.slice(1));
+          setShowToast(true);
+          setTimeout(() => setShowToast(false), 3000);
         });
     }, 5000);
 
@@ -39,7 +43,11 @@ export default function App() {
     const interval = setInterval(() => {
       setPendingOrders((prev) => [...prev, queue[0]]);
       setQueue((prev) => prev.slice(1));
+
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
     }, 60000);
+
     return () => clearInterval(interval);
   }, [queue]);
 
@@ -47,7 +55,7 @@ export default function App() {
   const handleNextPage = () => {};
 
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-[#2B2B30]">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-[#2B2B30] relative">
       {/* 헤더 영역 */}
       <Header
         currentPage={1}
@@ -127,6 +135,9 @@ export default function App() {
           </div>
         </aside>
       </div>
+
+      {/* 토스트 메시지 */}
+      <Toast visible={showToast} />
     </div>
   );
 }
