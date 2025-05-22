@@ -1,4 +1,17 @@
+import { useEffect, useState } from "react";
+
 export default function PendingOrderList({ pendingOrders, onAccept }) {
+  const [now, setNow] = useState(new Date());
+
+  // 1초마다 now 갱신
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNow(new Date());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <aside className="w-full md:w-80 h-0 md:h-auto flex flex-col items-center justify-start py-4">
       <p className="text-xl font-semibold text-black dark:text-white mb-4 h-9 leading-[36px]">
@@ -8,8 +21,7 @@ export default function PendingOrderList({ pendingOrders, onAccept }) {
       <div className="w-[256px] h-[916px] bg-[#F4F4F4] dark:bg-[#484850] rounded-xl overflow-y-auto px-4 py-2 space-y-4">
         {pendingOrders.map((order, idx) => {
           const orderDate = new Date(order.OrderDate.$date);
-          const now = new Date();
-          const elapsedMin = Math.floor((now - orderDate) / 60000);
+          const elapsedMin = Math.max(0, Math.floor((now - orderDate) / 60000));
           const formattedTime = orderDate.toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
