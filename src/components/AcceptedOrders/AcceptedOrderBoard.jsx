@@ -140,25 +140,27 @@ export default function AcceptedOrderBoard({
     currentPage * itemsPerPage
   );
 
+  let globalOrderIndex = 1;
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {pageCols.map((col, ci) => (
         <div key={ci} className="flex flex-col gap-y-8">
-          {col.map((c, cj) => (
-            <AcceptedOrderCard
-              key={cj}
-              order={c.order}
-              orderIndex={
-                sorted.findIndex(
-                  (o) => o.AcceptedDate.$date === c.order.AcceptedDate.$date
-                ) + 1
-              }
-              showHeader={c.showHeader}
-              showButton={c.showButton}
-              cardHeight={c.cardHeight}
-              onComplete={() => onComplete(c.order)}
-            />
-          ))}
+          {col.map((c, cj) => {
+            const card = (
+              <AcceptedOrderCard
+                key={cj}
+                order={c.order}
+                orderIndex={globalOrderIndex}
+                showHeader={c.showHeader}
+                showButton={c.showButton}
+                cardHeight={c.cardHeight}
+                onComplete={() => onComplete(c.order)}
+              />
+            );
+            globalOrderIndex++;
+            return card;
+          })}
         </div>
       ))}
     </div>
