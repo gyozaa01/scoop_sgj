@@ -11,6 +11,8 @@ export default function AcceptedOrderCard({
   showButton,
   cardHeight,
   onComplete,
+  isFirst,
+  isLast,
 }) {
   const acceptedDate = new Date(order.AcceptedDate.$date);
   const [now, setNow] = useState(new Date());
@@ -37,12 +39,20 @@ export default function AcceptedOrderCard({
 
   return (
     <div
-      className={`bg-[#F4F4F4] dark:bg-[#484850] rounded-xl px-4 pt-4 pb-3 flex flex-col justify-between ${
-        cardHeight === BIG_CARD ? "h-[1008px]" : "h-[494px]"
-      }`}
+      className={`bg-[#F4F4F4] dark:bg-[#484850] px-4 pt-4 pb-3 flex flex-col justify-between
+    ${cardHeight === BIG_CARD ? "h-[1008px]" : "h-[494px]"}
+    ${
+      isFirst && isLast
+        ? "rounded-3xl"
+        : isFirst
+        ? "rounded-t-3xl rounded-b-lg"
+        : isLast
+        ? "rounded-t-lg rounded-b-3xl"
+        : "rounded-lg"
+    }`}
     >
       {showHeader && (
-        <div className="bg-black dark:bg-[#65656F] text-white rounded-md px-4 py-3 mb-6">
+        <div className="bg-black dark:bg-[#65656F] text-white rounded-2xl px-4 py-3 mb-6">
           <div className="flex justify-between items-center font-bold mb-1">
             {/* 주문 수락 순서 */}
             <span>#{orderIndex}</span>
@@ -52,7 +62,7 @@ export default function AcceptedOrderCard({
               <span className="text-[12px] font-medium">{formattedTime}</span>
               {/* 경과 시간 */}
               <div
-                className={`px-2 py-1 rounded-full text-[12px] ${elapsedColorClass}`}
+                className={`px-2 py-1 rounded-xl text-[12px] ${elapsedColorClass}`}
               >
                 {elapsedMin}분 경과
               </div>
@@ -90,7 +100,7 @@ export default function AcceptedOrderCard({
         {order.Request?.Store && (
           <div className="mt-2">
             <div className="bg-white dark:bg-[#65656F] rounded-md p-4 font-semibold text-black dark:text-white">
-              <div className="text-[#7566FF] font-bold mb-1 text-[24px]">
+              <div className="text-[#7566FF] dark:text-[#C8C2FF] font-bold mb-1 text-[24px]">
                 요청사항
               </div>
               <div className="text-[20px]">{order.Request.Store}</div>
@@ -103,7 +113,7 @@ export default function AcceptedOrderCard({
       {showButton && (
         <div className="mt-auto pt-4">
           <button
-            className="w-full bg-[#7566FF] text-white rounded-md h-[56px] font-bold"
+            className="w-full bg-[#7566FF] text-white rounded-2xl h-[56px] font-bold"
             onClick={onComplete}
           >
             조리 완료

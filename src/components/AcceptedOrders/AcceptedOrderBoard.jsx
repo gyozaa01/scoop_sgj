@@ -124,6 +124,8 @@ function splitOrdersIntoCards(orders) {
         showHeader,
         showButton,
         cardHeight,
+        isFirst: !isContinuedOrder, // 현재 카드가 주문의 첫 카드인지
+        isLast: i === blocks.length, // 현재 카드가 주문의 마지막 카드인지
       });
 
       // 다음 카드를 위한 기준으로 lastCardHeight, lastcardOrderIndex에 저장
@@ -210,6 +212,8 @@ export default function AcceptedOrderBoard({
               showButton={card.showButton} // 버튼
               cardHeight={card.cardHeight} // 카드 높이(494 or 1008)
               onComplete={() => onComplete(card.order)} // 버튼 눌렀을 때 처리
+              isFirst={card.isFirst}
+              isLast={card.isLast}
             />
           ))}
         </div>
