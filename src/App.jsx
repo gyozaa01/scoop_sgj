@@ -100,7 +100,8 @@ export default function App() {
           !(
             o.Address === order.Address &&
             o.Price === order.Price &&
-            o.PGPrice === order.PGPrice
+            o.PGPrice === order.PGPrice &&
+            o.AcceptedDate?.$date === order.AcceptedDate?.$date
           )
       )
     );
