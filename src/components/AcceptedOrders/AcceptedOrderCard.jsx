@@ -83,7 +83,7 @@ export default function AcceptedOrderCard({
             </div>
 
             {(menu.PriceName || menu.Options?.length > 0) && (
-              <div className="pl-4 text-[#5E5E5E] space-y-1 mb-4 text-[20px]">
+              <div className="pl-4 text-[#5E5E5E] dark:text-[#E4E4E4] space-y-1 mb-4 text-[20px]">
                 {menu.PriceName && <div>{menu.PriceName}</div>}
                 {menu.Options?.map((opt, j) => (
                   <div key={j}>{opt.Name}</div>
@@ -114,7 +114,9 @@ export default function AcceptedOrderCard({
         <div className="mt-auto pt-4">
           <button
             className="w-full bg-[#7566FF] text-white rounded-2xl h-[56px] font-bold"
-            onClick={onComplete}
+            onClick={() => {
+              onComplete(order);
+            }}
           >
             조리 완료
           </button>

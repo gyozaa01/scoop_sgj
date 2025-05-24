@@ -4,14 +4,19 @@ import EmptyState from "./components/EmptyState";
 import Toast from "./components/Toast";
 import PendingOrderList from "./components/PendingOrderList";
 import AcceptedOrderBoard from "./components/AcceptedOrders/AcceptedOrderBoard";
+import ConfirmModal from "./components/ConfirmModal";
 
 export default function App() {
   const [pendingOrders, setPendingOrders] = useState([]);
   const [queue, setQueue] = useState([]);
   const [acceptedOrders, setAcceptedOrders] = useState([]);
-  const [showToast, setShowToast] = useState(false);
+  const [toast, setToast] = useState({ visible: false, message: "" });
   const [currentPage, setCurrentPage] = useState(1);
   const [columnsCount, setColumnsCount] = useState(0);
+  const [confirmModal, setConfirmModal] = useState({
+    visible: false,
+    target: null,
+  });
 
   const hasAcceptedOrders = acceptedOrders.length > 0;
 
@@ -51,8 +56,7 @@ export default function App() {
 
           setPendingOrders([updated[0]]);
           setQueue(updated.slice(1));
-          setShowToast(true);
-          setTimeout(() => setShowToast(false), 3000);
+          triggerToast("접수가 들어왔습니다.");
         });
     }, 5000);
 
@@ -65,9 +69,7 @@ export default function App() {
     const interval = setInterval(() => {
       setPendingOrders((prev) => [...prev, queue[0]]);
       setQueue((prev) => prev.slice(1));
-
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 3000);
+      triggerToast("접수가 들어왔습니다.");
     }, 60000);
 
     return () => clearInterval(interval);
@@ -82,6 +84,33 @@ export default function App() {
     };
     setAcceptedOrders((prev) => [...prev, accepted]);
     setPendingOrders((prev) => prev.filter((o) => o !== order));
+  };
+
+  // 조리 완료 확인 모달 띄우기
+  const handleCompleteOrder = (order) => {
+    setConfirmModal({ visible: true, target: order });
+  };
+
+  // 모달에서 '완료' 눌렀을 때 처리
+  const confirmCompleteOrder = () => {
+    const order = confirmModal.target;
+    setAcceptedOrders((prev) =>
+      prev.filter(
+        (o) =>
+          !(
+            o.Address === order.Address &&
+            o.Price === order.Price &&
+            o.PGPrice === order.PGPrice
+          )
+      )
+    );
+    setConfirmModal({ visible: false, target: null });
+    triggerToast("조리가 완료되었습니다.");
+  };
+
+  const triggerToast = (message) => {
+    setToast({ visible: true, message });
+    setTimeout(() => setToast({ visible: false, message: "" }), 3000);
   };
 
   const handlePrevPage = () => setCurrentPage((p) => Math.max(1, p - 1));
@@ -105,7 +134,7 @@ export default function App() {
               orders={acceptedOrders}
               currentPage={currentPage}
               onColumnsChange={setColumnsCount}
-              onComplete={handleAcceptOrder}
+              onComplete={handleCompleteOrder}
             />
           ) : (
             <EmptyState />
@@ -117,9 +146,14 @@ export default function App() {
           onAccept={handleAcceptOrder}
         />
       </div>
-
       {/* 토스트 메시지 */}
-      <Toast visible={showToast} />
+      <Toast visible={toast.visible} message={toast.message} />
+
+      <ConfirmModal
+        visible={confirmModal.visible}
+        onCancel={() => setConfirmModal({ visible: false, target: null })}
+        onConfirm={confirmCompleteOrder}
+      />
     </div>
   );
 }
