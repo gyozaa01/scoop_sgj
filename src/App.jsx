@@ -117,6 +117,14 @@ export default function App() {
   const handlePrevPage = () => setCurrentPage((p) => Math.max(1, p - 1));
   const handleNextPage = () => setCurrentPage((p) => p + 1);
 
+  // columnsCount 변경 시 currentPage 보정
+  useEffect(() => {
+    const totalPages = Math.ceil(columnsCount / 4);
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages || 1);
+    }
+  }, [columnsCount, currentPage]);
+
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-[#2B2B30]">
       {/* 헤더 영역 */}

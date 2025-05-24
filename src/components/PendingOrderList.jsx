@@ -18,7 +18,7 @@ export default function PendingOrderList({ pendingOrders, onAccept }) {
         접수대기 <span className="text-[#7566FF]">{pendingOrders.length}</span>
       </p>
 
-      <div className="w-[256px] h-[916px] bg-[#F4F4F4] dark:bg-[#484850] rounded-xl overflow-y-auto px-4 py-2 space-y-4">
+      <div className="w-[256px] h-[956px] bg-[#F4F4F4] dark:bg-[#484850] rounded-xl overflow-y-auto px-4 py-2 space-y-4">
         {pendingOrders.map((order, idx) => {
           const orderDate = new Date(order.OrderDate.$date);
           const elapsedMin = Math.max(0, Math.floor((now - orderDate) / 60000));
