@@ -21,12 +21,7 @@ export default function App() {
       .then((res) => res.json())
       .then((data) => {
         const now = new Date();
-        const filtered = data.filter((order) =>
-          ["주문테스트4", "주문테스트5"].some((addr) =>
-            order.Address.includes(addr)
-          )
-        );
-        const updated = filtered.map((order) => ({
+        const updated = data.map((order) => ({
           ...order,
           AcceptedDate: { $date: now.toISOString() },
         }));
@@ -109,8 +104,8 @@ export default function App() {
             <AcceptedOrderBoard
               orders={acceptedOrders}
               currentPage={currentPage}
-              itemsPerPage={4}
               onColumnsChange={setColumnsCount}
+              onComplete={handleAcceptOrder}
             />
           ) : (
             <EmptyState />
